@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "tech-int-cheat",
+  "description": "Cheating on technical interview virtual meetings",
+  "version": "1.0",
+  "permissions": ["activeTab", "scripting", "tabGroups"],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": "images/icon.png"
+  },
+  "content_scripts": [
+    {
+      "js": ["scripts/close_caption_extraction.js"],
+      "matches": [
+        "https://meet.google.com/*"
+      ]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
