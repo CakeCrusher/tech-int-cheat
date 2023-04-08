@@ -88,8 +88,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
     }
     );
-    
   }
+  if (request.type === "CHATGPT_RESPONSE") {
+    // get the element of id "responseContext" and populate the inner text with startChat and endChat
+    const responseContext = document.getElementById("responseContext");
+    responseContext.innerText = `Response from chat " ${chat[startChat].content} " to " ${chat[endChat].content} "`;
+
+    // get element of id "responseContainer" and populate the inner text with the response
+    const responseContainer = document.getElementById("responseContainer");
+    responseContainer.innerText = request.data.generatedResponse;
+  }
+
   if (request.type === "SUGGESTED_CODE") {
     // get element of id "code"
     statusSpan.innerText = "Idle";

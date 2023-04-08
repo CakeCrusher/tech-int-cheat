@@ -41,6 +41,18 @@
     .selectedChatEnd {
       border-bottom: 5px solid #09ff00;
     }
+    #gernerateResponse {
+      margin-bottom: 10px;
+    }
+    #responseContainer {
+      background-color: #b2cbdd;
+      padding: 10px;
+      white-space: pre-wrap;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      max-height: 300px;
+      overflow: auto;
+    }
     
   </style>
 </head>
@@ -53,6 +65,8 @@
   </div>
   <div>Selected indexes: <strong id="startContentEx"></strong> ... <strong id="endContentEx"></strong></div>
   <button id="gernerateResponse">generate response</button>
+  <div id="responseContext"></div>
+  <div id="responseContainer">(Response will show here)</div>
   <!-- <button id="start_rec_btn" style="margin-bottom: 10px;">start recording</button>
   <button id="btn">stop recording & get code</button> -->
   <script src="./popup.js"></script>
