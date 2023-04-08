@@ -27,7 +27,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const { meetId, startChat, endChat } = request.data;
     // get the slice of chat from startChat to endChat and make a deep copy of it
     const chat = chats[meetId];
-    const chatSlice = JSON.parse(JSON.stringify(chat.slice(startChat, endChat+1)));
+    const chatSlice = JSON.parse(
+      JSON.stringify(chat.slice(startChat, endChat + 1))
+    );
     // preprocess the chatSlice so that any recurring roles are merged into one
     const preprocessedChatSlice = [];
     let i = 0;

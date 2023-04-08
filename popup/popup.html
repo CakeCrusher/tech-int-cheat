@@ -1,73 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
-    #chatContainer {
-      display: flex;
-      flex-direction: column;
-      background-color: #3c4043;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 10px;
-      max-height: 300px;
-      overflow: auto;
-    }
-    .youChatInstance {
-      background-color: #395163;
-      align-self: flex-end;
-    }
-    .interviewerChatInstance {
-      background-color: #4c5256;
-      align-self: flex-start;
-    }
-    .youChatInstance, .interviewerChatInstance {
-      color: #fff;
-      padding: 5px;
-      border-radius: 5px;
-      margin-bottom: 5px;
-      cursor: pointer;
-      opacity: .8;
-    }
-    .youChatInstance:hover, .interviewerChatInstance:hover {
-      opacity: 1;
-    }
-    .selectedChatStart {
-      border-top: 5px solid #09ff00;
-    }
-    .selectedChatEnd {
-      border-bottom: 5px solid #09ff00;
-    }
-    #gernerateResponse {
-      margin-bottom: 10px;
-    }
-    #responseContainer {
-      background-color: #b2cbdd;
-      padding: 10px;
-      white-space: pre-wrap;
-      border-radius: 5px;
-      margin-bottom: 10px;
-      max-height: 300px;
-      overflow: auto;
-    }
-    .hidden {
-      display: none;
-    }
-    
-  </style>
-</head>
-<body style="width: 500px; display: flex; flex-direction: column;">
-  <h1>tech-int-cheat</h1>
-  <div id="chatContainer">
-    <!-- this container will be populated dynamicly with messages of class youChatInstance and interviewerChatInstance -->
-  </div>
-  <div>Selected indexes: <strong id="startContentEx"></strong> ... <strong id="endContentEx"></strong></div>
-  <button id="gernerateResponse" disabled>generate response</button>
-  <div>Response indexes: <strong id="responseStartContentEx"></strong> ... <strong id="responseEndContentEx"></strong></div>
-  <div id="responseContainer">(Response will show here)</div>
-  <script src="./popup.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #chatContainer {
+        display: flex;
+        flex-direction: column;
+        background-color: #3c4043;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        max-height: 300px;
+        overflow: auto;
+      }
+      .youChatInstance {
+        background-color: #395163;
+        align-self: flex-end;
+      }
+      .interviewerChatInstance {
+        background-color: #4c5256;
+        align-self: flex-start;
+      }
+      .youChatInstance,
+      .interviewerChatInstance {
+        color: #fff;
+        padding: 5px;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        cursor: pointer;
+        opacity: 0.8;
+      }
+      .youChatInstance:hover,
+      .interviewerChatInstance:hover {
+        opacity: 1;
+      }
+      .selectedChatStart {
+        border-top: 5px solid #09ff00;
+      }
+      .selectedChatEnd {
+        border-bottom: 5px solid #09ff00;
+      }
+      #gernerateResponse {
+        margin-bottom: 10px;
+      }
+      #responseContainer {
+        background-color: #b2cbdd;
+        padding: 10px;
+        white-space: pre-wrap;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        max-height: 300px;
+        overflow: auto;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body style="width: 500px; display: flex; flex-direction: column">
+    <h1>tech-int-cheat</h1>
+    <div id="chatContainer">
+      <!-- this container will be populated dynamicly with messages of class youChatInstance and interviewerChatInstance -->
+    </div>
+    <div>
+      Selected indexes: <strong id="startContentEx"></strong> ...
+      <strong id="endContentEx"></strong>
+    </div>
+    <button id="gernerateResponse" disabled>generate response</button>
+    <div>
+      Response indexes: <strong id="responseStartContentEx"></strong> ...
+      <strong id="responseEndContentEx"></strong>
+    </div>
+    <div id="responseContainer">(Response will show here)</div>
+    <script src="./popup.js"></script>
+  </body>
 </html>
