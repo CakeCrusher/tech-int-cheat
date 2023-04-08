@@ -35,7 +35,7 @@ setInterval(function () {
     });
     // send chat to service worker
     console.log(chat);
-    chrome.runtime.sendMessage({ type: "CURRENT_CHAT", data: chat });
+    chrome.runtime.sendMessage({ type: "CURRENT_CHAT", data: { chat } });
   // } catch (e) {
   //   console.log("no CC", e);
   // }
