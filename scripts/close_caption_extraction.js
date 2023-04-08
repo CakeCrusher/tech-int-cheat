@@ -1,42 +1,42 @@
-// console.log("injected!!");
+const randomId = () => {
+  let id = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < 5; i++) {
+    id += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return id;
+}
 
 // repeat every 1 second
-const messagesHistory = []
-const messages = [];
+const chat = []
 setInterval(function () {
-  // get the current message
-  // console.log("Running script");
-  try {
-    const current_messages = document.querySelectorAll(
-      "div div.Mz6pEf.wY1pdd div"
-    )[0].children;
-    for (let i = 0; i < current_messages.length - 1; i++) {
-      const message = current_messages[i].innerText;
-      if (!messages.includes(message) && !messagesHistory.includes(message)) {
-        if (messages.length > 4) {
-          const oldMessage = messages.shift();
-          if (messagesHistory.length > 30){
-            messagesHistory.shift();
-          }
-          messagesHistory.push(oldMessage);
-        }
-        messages.push(message);
-        // console.log(message);
-      }
-    }
-  } catch (e) {
-    // console.log("no CC", e);
-  }
-  // console.log("Messages", messages);
-  for (let i = 0; i < messages.length; i++) {
-    if (messagesHistory.length > 30){
-      messagesHistory.shift()
-    }
-    const messageToSend = messages.shift()
-    // console.log("Sending message", messageToSend)
-    chrome.runtime.sendMessage({ type: "CLOSED_CAPTION", message: messageToSend });
-    messagesHistory.push(messageToSend);
-  }
-}, 1000);
+  // try {
+    const chatDivs = document.querySelectorAll('div.iOzk7');
+    const ccContainer = Array.from(chatDivs).filter(div => {
+      return div.style.display != 'none'
+    })[0];
+    let speakerContainers = ccContainer.querySelectorAll('.TBMuR.bj4p3b')
+    // create a function that creates a random id of length 10
 
-// send message the service_worker titled "CLOSED_CAPTIONS" which sends "messages"
+    speakerContainers.forEach(speaker => {
+      console.log(speaker)
+      const ticIdOnDiv = speaker.getAttribute('ticId');
+      const ticId = ticIdOnDiv ? ticIdOnDiv : randomId();
+      const name = speaker.querySelector('.jxFHg').textContent;
+      const content = speaker.querySelector('.iTTPOb.VbkSUe').textContent;
+      const chatInstance = { role: name, content: content.trim(), ticId }
+      if (ticIdOnDiv) {
+        const chatIndex = chat.findIndex(chatInstance => chatInstance.ticId === ticId);
+        chat[chatIndex].content =  chatInstance.content;
+      } else {
+        chat.push(chatInstance);
+        speaker.setAttribute('ticId', ticId);
+      }
+    });
+    // send chat to service worker
+    console.log(chat);
+    chrome.runtime.sendMessage({ type: "CURRENT_CHAT", data: chat });
+  // } catch (e) {
+  //   console.log("no CC", e);
+  // }
+}, 1000);
