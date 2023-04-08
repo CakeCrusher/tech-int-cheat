@@ -20,11 +20,41 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   meetId = url.split('?')[0].split('/').pop();
 });
 
+const reactToSelectedChats = () => {
+  // remove the class selectedChatStart and selectedChatEnd from all the divs
+  const chatInstances = document.querySelectorAll(".youChatInstance, .interviewerChatInstance");
+  chatInstances.forEach(chatInstance => {
+    chatInstance.classList.remove("selectedChatStart");
+    chatInstance.classList.remove("selectedChatEnd");
+  });
+  // find the startChat and endChat divs and add the class selectedChatStart and selectedChatEnd respectively
+  if (startChat !== null) {
+    const startChatInstance = document.querySelector(`[ticid="${chat[startChat].ticId}"]`);
+    startChatInstance.classList.add("selectedChatStart");
+  }
+  if (endChat !== null) {
+    const endChatInstance = document.querySelector(`[ticid="${chat[endChat].ticId}"]`);
+    endChatInstance.classList.add("selectedChatEnd");
+  }
+
+  startContentEx.innerText = startChat !== null ? chat[startChat].content : "";
+  endContentEx.innerText = endChat !== null ? chat[endChat].content : "";
+
+  if (startChat !== null && endChat !== null) {
+    generateResponseBtn.disabled = false;
+  } else {
+    generateResponseBtn.disabled = true;
+  }
+}
+
 const generateResponseBtn = document.getElementById("gernerateResponse");
 // add event listener to the button of id gernerateResponse
 generateResponseBtn.addEventListener("click", function () {
   // send a message to the service worker of type "GENERATE_RESPONSE" with the startChat and endChat
   chrome.runtime.sendMessage({ type: "GET_RESPONSE", data: { meetId, startChat, endChat } });
+  startChat = null;
+  endChat = null;
+  reactToSelectedChats();
 })
 
 
@@ -34,31 +64,18 @@ const selectChatInstance = (targetChatInstanceElement) => {
   const chatIndex = chat.findIndex(chatInstance => chatInstance.ticId === targetTicId);
   if (startChat === null) {
     startChat = chatIndex;
-    targetChatInstanceElement.classList.add("selectedChatStart");
   } else if (endChat === null) {
-    endChat = chatIndex;
-    targetChatInstanceElement.classList.add("selectedChatEnd");
+    if (chatIndex < startChat) {
+      startChat = chatIndex;
+    } else {
+      endChat = chatIndex;
+    }
   } else {
-    // find startChat and endChat divs and remove their respective classes
-    const startChatDiv = document.querySelector(`[ticId="${chat[startChat].ticId}"]`);
-    const endChatDiv = document.querySelector(`[ticId="${chat[endChat].ticId}"]`);
-    startChatDiv.classList.remove("selectedChatStart");
-    endChatDiv.classList.remove("selectedChatEnd");
-    startChat = null;
-    endChat = null;
+    startChat = null
+    endChat = null
   }
-
-  console.log("startChat", startChat, "endChat", endChat)
-  // updated the startContentEx and endContentEx with the content of the chatInstance
-  startContentEx.innerText = startChat !== null ? chat[startChat].content : "";
-  endContentEx.innerText = endChat !== null ? chat[endChat].content : "";
-  // if both start chat and end chat exist then enable the generateResponseBtn
-  if (startChat !== null && endChat !== null) {
-    generateResponseBtn.disabled = false;
-  } else {
-    generateResponseBtn.disabled = true;
-  }
-
+  
+  reactToSelectedChats();
 }
 
 
