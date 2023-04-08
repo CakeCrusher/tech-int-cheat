@@ -1,6 +1,7 @@
 console.log("Background!!");
 
-let chats = {};
+let chats = {}; // { meetId: [ { ticId, role, content } ] }
+let chatGptResponses = {}; // { meetId: { generatedResponse, startChat, endChat } }
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // if request is of type CURRENT_CHAT then concat on the ticId
   if (request.type === "CURRENT_CHAT") {
@@ -62,9 +63,20 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const generatedResponse = responseJson.response;
 
     // send the generatedResponse back to the popup
+    chatGptResponses[meetId] = { generatedResponse, startChat, endChat };
     chrome.runtime.sendMessage({
       type: "CHATGPT_RESPONSE",
-      data: { generatedResponse, startChat, endChat },
+      data: chatGptResponses[meetId],
     });
+  }
+  // if request is of type GET_RESPONSE then send the response back to the popup
+  if (request.type === "GET_CHATGPT_RESPONSE") {
+    const { meetId } = request.data;
+    if (chatGptResponses[meetId]) {
+      chrome.runtime.sendMessage({
+        type: "CHATGPT_RESPONSE",
+        data: chatGptResponses[meetId],
+      });
+    }
   }
 });

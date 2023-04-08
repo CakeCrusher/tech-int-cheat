@@ -7,6 +7,10 @@ let endChat = null;
 // get element of id selectedIndexes
 const startContentEx = document.getElementById("startContentEx");
 const endContentEx = document.getElementById("endContentEx");
+const responseStartContentEx = document.getElementById("responseStartContentEx");
+const responseEndContentEx = document.getElementById("responseEndContentEx");
+const responseContainer = document.getElementById("responseContainer");
+
 
 // check the current tab url
 let meetId = null;
@@ -63,8 +67,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // iterate through the chat and populate the chatContainer div with divs containing the class youChatInstance and interviewerChatInstance depending on the role, the text content of the div should be the content
     const chatContainer = document.getElementById("chatContainer");
     // only add a new div if the ticId is not already in the chatContainer
-    console.log("request.data.chat", request.data.chat)
     chat = request.data.chats[meetId]
+
+    // if there is nothing inside the responseContainer.innerText then send a message to the service worker of type "GET_CHATGPT_RESPONSE"
+    if (responseContainer.innerText.includes("(Response will show here)")) {
+      console.log("meetId", meetId)
+      chrome.runtime.sendMessage({ type: "GET_CHATGPT_RESPONSE", data: { meetId } });
+    }
+
     chat.forEach(chatInstance => {
       const chatDiv = document.createElement("div");
       chatDiv.innerText = chatInstance.content;
@@ -91,12 +101,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     );
   }
   if (request.type === "CHATGPT_RESPONSE") {
-    // get the element of id "responseContext" and populate the inner text with startChat and endChat
-    const responseContext = document.getElementById("responseContext");
-    responseContext.innerText = `Response from chat " ${chat[startChat].content} " to " ${chat[endChat].content} "`;
-
-    // get element of id "responseContainer" and populate the inner text with the response
-    const responseContainer = document.getElementById("responseContainer");
+    responseStartContentEx.innerText = chat[request.data.startChat].content
+    responseEndContentEx.innerText = chat[request.data.endChat].content
     responseContainer.innerText = request.data.generatedResponse;
   }
 })
