@@ -5,13 +5,45 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    #chatContainer {
+      display: flex;
+      flex-direction: column;
+      background-color: #3c4043;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    .youChatInstance {
+      /* bluish background color */
+      background-color: #395163;
+      color: #fff;
+      padding: 5px;
+      border-radius: 5px;
+      margin-bottom: 5px;
+      align-self: flex-end;
+    }
+    .interviewerChatInstance {
+      /* greyish background color */
+      background-color: #4c5256;
+      color: #fff;
+      padding: 5px;
+      border-radius: 5px;
+      margin-bottom: 5px;
+      align-self: flex-start;
+    }
+  </style>
 </head>
 <body style="width: 500px; display: flex; flex-direction: column;">
   <h1>tech-int-cheat</h1>
-  <h2>Status: <span id="status">Idle</span></h2>
-  <button id="start_rec_btn" style="margin-bottom: 10px;">start recording</button>
-  <button id="btn">stop recording & get code</button>
+  <!-- <h2>Status: <span id="status">Idle</span></h2> -->
+  <!-- create a chat container to hold a chat exchange -->
+  <div id="chatContainer">
+    <!-- this container will be populated dynamicly with messages of class youChatInstance and interviewerChatInstance -->
+  </div>
+  <!-- <button id="start_rec_btn" style="margin-bottom: 10px;">start recording</button>
+  <button id="btn">stop recording & get code</button> -->
   <script src="./popup.js"></script>
-  <code style="background-color: #3c4043; color: #fff; padding: 5px; " id="code">CODE_WILL_APPEAR_HERE</code>
+  <!-- <code style="background-color: #3c4043; color: #fff; padding: 5px; " id="code">CODE_WILL_APPEAR_HERE</code> -->
 </body>
 </html>

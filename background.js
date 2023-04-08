@@ -6,15 +6,16 @@ let chat = []
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // if request is of type CURRENT_CHAT then concat on the ticId
   if (request.type === "CURRENT_CHAT") {
-    const { data } = request;
-    request.data.chat.forEach(chatInstance => {
-      const chatIndex = chat.findIndex(chatInstance => chatInstance.ticId === ticId);
+    const passedChat = request.data.chat;
+    passedChat.forEach(passedChatInstance => {
+      const chatIndex = chat.findIndex(chatInstance => chatInstance.ticId === passedChatInstance.ticId);
       if (chatIndex > -1) {
-        chat[chatIndex].content =  chatInstance.content;
+        chat[chatIndex].content =  passedChatInstance.content;
       } else {
-        chat.push(chatInstance);
+        chat.push(passedChatInstance);
       }
     });
+    console.log("Background chat: ", chat)
     chrome.runtime.sendMessage({ type: "FULL_CURRENT_CHAT", data: { chat } });
   }
   if (request.type === "CLOSED_CAPTION") {
