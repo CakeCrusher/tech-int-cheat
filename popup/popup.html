@@ -53,6 +53,9 @@
       max-height: 300px;
       overflow: auto;
     }
+    .hidden {
+      display: none;
+    }
     
   </style>
 </head>
@@ -62,7 +65,7 @@
     <!-- this container will be populated dynamicly with messages of class youChatInstance and interviewerChatInstance -->
   </div>
   <div>Selected indexes: <strong id="startContentEx"></strong> ... <strong id="endContentEx"></strong></div>
-  <button id="gernerateResponse">generate response</button>
+  <button id="gernerateResponse" disabled>generate response</button>
   <div id="responseContext"></div>
   <div id="responseContainer">(Response will show here)</div>
   <script src="./popup.js"></script>

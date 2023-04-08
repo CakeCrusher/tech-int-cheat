@@ -1,10 +1,15 @@
 console.log("Background!!");
 
-let chat = [];
+let chats = {};
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // if request is of type CURRENT_CHAT then concat on the ticId
   if (request.type === "CURRENT_CHAT") {
+    const meetId = request.data.meetId;
     const passedChat = request.data.chat;
+    if (!chats[meetId]) {
+      chats[meetId] = [];
+    }
+    const chat = chats[meetId];
     passedChat.forEach((passedChatInstance) => {
       const chatIndex = chat.findIndex(
         (chatInstance) => chatInstance.ticId === passedChatInstance.ticId
@@ -15,12 +20,13 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         chat.push(passedChatInstance);
       }
     });
-    chrome.runtime.sendMessage({ type: "FULL_CURRENT_CHAT", data: { chat } });
+    chrome.runtime.sendMessage({ type: "FULL_CURRENT_CHATS", data: { chats } });
   }
   if (request.type === "GET_RESPONSE") {
-    const { startChat, endChat } = request.data;
-    // get the slice of chat from startChat to endChat
-    const chatSlice = chat.slice(startChat, endChat + 1);
+    const { meetId, startChat, endChat } = request.data;
+    // get the slice of chat from startChat to endChat and make a deep copy of it
+    const chat = chats[meetId];
+    const chatSlice = JSON.parse(JSON.stringify(chat.slice(startChat, endChat+1)));
     // preprocess the chatSlice so that any recurring roles are merged into one
     const preprocessedChatSlice = [];
     let i = 0;

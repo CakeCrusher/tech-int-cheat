@@ -34,7 +34,10 @@ setInterval(function () {
     });
     // send chat to service worker
     // console.log(chat);
-    chrome.runtime.sendMessage({ type: "CURRENT_CHAT", data: { chat } });
+    // get meeting if from the url and send it to the service worker
+    // there is a possibility of the url being https://meet.google.com/bxg-epiv-oio?authuser=1&hs=179
+    const meetId = window.location.href.split('?')[0].split('/').pop();
+    chrome.runtime.sendMessage({ type: "CURRENT_CHAT", data: { chat, meetId } });
   } catch (e) {
     // console.log("no CC", e);
   }
