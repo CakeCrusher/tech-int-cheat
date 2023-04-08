@@ -1,21 +1,4 @@
 console.log("Popup!!")
-// // send a message to the service worker of type "RECORD"
-
-// const startBtn = document.getElementById("start_rec_btn");
-// const statusSpan = document.getElementById("status");
-// // add event listener to the button
-// startBtn.addEventListener("click", function () {
-//   statusSpan.innerText = "Recording...";
-//   chrome.runtime.sendMessage({ type: "RECORD" });
-// })
-
-// // get element of id "btn"
-// const btn = document.getElementById("btn");
-// // add event listener to the button
-// btn.addEventListener("click", function () {
-//   statusSpan.innerText = "Awaiting results...";
-//   chrome.runtime.sendMessage({ type: "STOP_RECORDING" });
-// })
 
 let chat = []
 let startChat = null
@@ -44,7 +27,6 @@ const selectChatInstance = (targetChatInstanceElement) => {
     startChat = null;
     endChat = null;
   }
-  console.log("Chat index: ", startChat, endChat, targetTicId, chatIndex)
 
   // updated the startContentEx and endContentEx with the content of the chatInstance
   startContentEx.innerText = startChat !== null ? chat[startChat].content : "";
@@ -59,13 +41,10 @@ generateResponseBtn.addEventListener("click", function () {
   chrome.runtime.sendMessage({ type: "GET_RESPONSE", data: { startChat, endChat } });
 })
 
-// listen to message with type "SUGGESTED_CODE"
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log("Popup received message", request)
   if (request.type === "FULL_CURRENT_CHAT") {
     // iterate through the chat and populate the chatContainer div with divs containing the class youChatInstance and interviewerChatInstance depending on the role, the text content of the div should be the content
     const chatContainer = document.getElementById("chatContainer");
-    console.log("Popup chat: ", request.data.chat)
     // only add a new div if the ticId is not already in the chatContainer
     chat = request.data.chat;
     chat.forEach(chatInstance => {
@@ -85,6 +64,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       
       if (document.querySelector(`[ticId="${chatInstance.ticId}"]`) === null) {
         chatContainer.appendChild(chatDiv);
+      } else {
+        // get the div with the ticId and update the innerText
+        const existingChatDiv = document.querySelector(`[ticId="${chatInstance.ticId}"]`);
+        existingChatDiv.innerText = chatInstance.content;
       }
     }
     );
@@ -97,14 +80,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // get element of id "responseContainer" and populate the inner text with the response
     const responseContainer = document.getElementById("responseContainer");
     responseContainer.innerText = request.data.generatedResponse;
-  }
-
-  if (request.type === "SUGGESTED_CODE") {
-    // get element of id "code"
-    statusSpan.innerText = "Idle";
-    const code = document.getElementById("code");
-    // set the innerHTML of the code element to the code
-    code.innerText = request.code;
-    console.log("Popup received message", request.code);
   }
 })

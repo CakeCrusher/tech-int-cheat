@@ -19,7 +19,6 @@ setInterval(function () {
     // create a function that creates a random id of length 10
 
     speakerContainers.forEach(speaker => {
-      console.log(speaker)
       const ticIdOnDiv = speaker.getAttribute('ticId');
       const ticId = ticIdOnDiv ? ticIdOnDiv : randomId();
       const name = speaker.querySelector('.jxFHg').textContent;
@@ -34,9 +33,9 @@ setInterval(function () {
       }
     });
     // send chat to service worker
-    console.log(chat);
+    // console.log(chat);
     chrome.runtime.sendMessage({ type: "CURRENT_CHAT", data: { chat } });
   } catch (e) {
-    console.log("no CC", e);
+    // console.log("no CC", e);
   }
 }, 1000);
