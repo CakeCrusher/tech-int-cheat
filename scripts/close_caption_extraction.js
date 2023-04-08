@@ -10,7 +10,7 @@ const randomId = () => {
 // repeat every 1 second
 const chat = []
 setInterval(function () {
-  // try {
+  try {
     const chatDivs = document.querySelectorAll('div.iOzk7');
     const ccContainer = Array.from(chatDivs).filter(div => {
       return div.style.display != 'none'
@@ -36,7 +36,7 @@ setInterval(function () {
     // send chat to service worker
     console.log(chat);
     chrome.runtime.sendMessage({ type: "CURRENT_CHAT", data: { chat } });
-  // } catch (e) {
-  //   console.log("no CC", e);
-  // }
+  } catch (e) {
+    console.log("no CC", e);
+  }
 }, 1000);

@@ -17,6 +17,48 @@ console.log("Popup!!")
 //   chrome.runtime.sendMessage({ type: "STOP_RECORDING" });
 // })
 
+let chat = []
+let startChat = null
+let endChat = null;
+
+// get element of id selectedIndexes
+const startContentEx = document.getElementById("startContentEx");
+const endContentEx = document.getElementById("endContentEx");
+
+const selectChatInstance = (targetChatInstanceElement) => {
+  // get ticId attribute from the targetChatInstanceElement
+  const targetTicId = targetChatInstanceElement.getAttribute("ticid");
+  const chatIndex = chat.findIndex(chatInstance => chatInstance.ticId === targetTicId);
+  if (startChat === null) {
+    startChat = chatIndex;
+    targetChatInstanceElement.classList.add("selectedChatStart");
+  } else if (endChat === null) {
+    endChat = chatIndex;
+    targetChatInstanceElement.classList.add("selectedChatEnd");
+  } else {
+    // find startChat and endChat divs and remove their respective classes
+    const startChatDiv = document.querySelector(`[ticId="${chat[startChat].ticId}"]`);
+    const endChatDiv = document.querySelector(`[ticId="${chat[endChat].ticId}"]`);
+    startChatDiv.classList.remove("selectedChatStart");
+    endChatDiv.classList.remove("selectedChatEnd");
+    startChat = null;
+    endChat = null;
+  }
+  console.log("Chat index: ", startChat, endChat, targetTicId, chatIndex)
+
+  // updated the startContentEx and endContentEx with the content of the chatInstance
+  startContentEx.innerText = startChat !== null ? chat[startChat].content : "";
+  endContentEx.innerText = endChat !== null ? chat[endChat].content : "";
+
+}
+
+// add event listener to the button of id gernerateResponse
+const generateResponseBtn = document.getElementById("gernerateResponse");
+generateResponseBtn.addEventListener("click", function () {
+  // send a message to the service worker of type "GENERATE_RESPONSE" with the startChat and endChat
+  chrome.runtime.sendMessage({ type: "GET_RESPONSE", data: { startChat, endChat } });
+})
+
 // listen to message with type "SUGGESTED_CODE"
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log("Popup received message", request)
@@ -25,7 +67,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const chatContainer = document.getElementById("chatContainer");
     console.log("Popup chat: ", request.data.chat)
     // only add a new div if the ticId is not already in the chatContainer
-    request.data.chat.forEach(chatInstance => {
+    chat = request.data.chat;
+    chat.forEach(chatInstance => {
       const chatDiv = document.createElement("div");
       chatDiv.innerText = chatInstance.content;
       if (chatInstance.role.toUpperCase() === "YOU") {
@@ -35,7 +78,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
       // add an attribute ticId with the value of the ticId
       chatDiv.setAttribute("ticId", chatInstance.ticId);
-      console.log("Chat div: ", chatDiv)
+
+      chatDiv.addEventListener("click", function () {
+        selectChatInstance(chatDiv);
+      })
+      
       if (document.querySelector(`[ticId="${chatInstance.ticId}"]`) === null) {
         chatContainer.appendChild(chatDiv);
       }
