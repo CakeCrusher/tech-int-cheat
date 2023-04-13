@@ -52,7 +52,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     // send the preprocessedChatSlice to the backend https://635f-68-234-232-23.ngrok.io/infer_response and pass the preprocessedChatSlice as the json body
     const response = await fetch(
-      `https://635f-68-234-232-23.ngrok.io/infer_response`,
+      `https://c647-68-234-232-24.ngrok-free.app/infer_response`,
       {
         method: "POST",
         headers: {
