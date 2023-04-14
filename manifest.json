@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "tech-int-cheat",
-  "description": "Cheating on technical interview virtual meetings",
+  "description": "Revamp your virtual meetings with an AI-powered response generator that leverages ChatGPT and temporary discussion records.",
   "version": "1.0",
-  "permissions": ["activeTab", "scripting", "tabGroups"],
+  "permissions": ["activeTab", "scripting"],
   "host_permissions": ["https://t23m9fecmc.execute-api.us-east-2.amazonaws.com/Prod/infer_response"],
   "action": {
     "default_popup": "popup/popup.html",
