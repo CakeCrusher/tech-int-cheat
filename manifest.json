@@ -4,9 +4,15 @@
   "description": "Cheating on technical interview virtual meetings",
   "version": "1.0",
   "permissions": ["activeTab", "scripting", "tabGroups"],
+  "host_permissions": ["https://t23m9fecmc.execute-api.us-east-2.amazonaws.com/Prod/infer_response"],
   "action": {
     "default_popup": "popup/popup.html",
-    "default_icon": "images/icon.png"
+    "default_icon": "images/extension-128.png"
+  },
+  "icons": {
+    "32": "images/extension-32.png",
+    "48": "images/extension-48.png",
+    "128": "images/extension-128.png"
   },
   "content_scripts": [
     {

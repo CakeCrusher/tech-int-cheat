@@ -55,6 +55,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       `https://t23m9fecmc.execute-api.us-east-2.amazonaws.com/Prod/infer_response`,
       {
         method: "POST",
+        mode: "cors",
         headers: {
           "Content-Type": "application/json",
         },
