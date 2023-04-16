@@ -14,6 +14,7 @@ Currently it only works on google meet as it depends on its closed captions,  th
 
 ## TODO
 - [x] allow you to select text to analyze
+- [ ] refactor client to use a React build with TypeScript
 - [ ] allow you to input your own OpenAI API key
 - [ ] allow editing of the chat
 - [ ] display answers on the meeting page
