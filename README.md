@@ -1,6 +1,8 @@
 # tech-int-cheat
 A chrome extension that pairs with OpenAI generative models (soon ChatGTP) to cheat on technical interviews
 
+[Downaload from the Chrome Web Store](https://chrome.google.com/webstore/detail/tech-int-cheat/ldignaknonbhlddmhbfpempkbkdmbopo?hl=en&authuser=0)
+
 ## Demo
 
 
