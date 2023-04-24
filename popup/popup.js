@@ -139,4 +139,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     responseEndContentEx.innerText = chat[request.data.endChat].content;
     responseContainer.innerText = request.data.generatedResponse;
   }
+  if (request.type === "FAILED_RESPONSE") {
+    responseStartContentEx.innerText = "";
+    responseEndContentEx.innerText = "";
+    responseContainer.innerText = "(Sorry response failed to generate please rejoin the meet and try again)";
+  }
 });
