@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "tech-int-cheat",
   "description": "Revamp your virtual meetings with an AI-powered response generator that leverages ChatGPT and temporary discussion records.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "permissions": ["activeTab"],
   "host_permissions": ["https://t23m9fecmc.execute-api.us-east-2.amazonaws.com/Prod/infer_response"],
   "action": {
