@@ -1,0 +1,52 @@
+#chatContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: #3c4043;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  max-height: 300px;
+  overflow: auto;
+}
+.youChatInstance {
+  background-color: #395163;
+  align-self: flex-end;
+}
+.interviewerChatInstance {
+  background-color: #4c5256;
+  align-self: flex-start;
+}
+.youChatInstance,
+.interviewerChatInstance {
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+.youChatInstance:hover,
+.interviewerChatInstance:hover {
+  opacity: 1;
+}
+.selectedChatStart {
+  border-top: 5px solid #09ff00;
+}
+.selectedChatEnd {
+  border-bottom: 5px solid #09ff00;
+}
+#gernerateResponse {
+  margin-bottom: 10px;
+}
+#responseContainer {
+  background-color: #b2cbdd;
+  padding: 10px;
+  white-space: pre-wrap;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  max-height: 300px;
+  overflow: auto;
+}
+.hidden {
+  display: none;
+}

@@ -1,0 +1,7 @@
+/node_modules
+/build
+
+.DS_Store
+/.github/workflows*
+yarn.lock
+package-lock.json

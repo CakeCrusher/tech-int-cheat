@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "tech-int-cheat",
+  "description": "Revamp your virtual meetings with an AI-powered response generator that leverages ChatGPT and temporary discussion records.",
+  "version": "1.1.0",
+  "host_permissions": ["https://tech-int-cheat-backend.herokuapp.com/infer_response"],
+  "permissions": ["storage", "webNavigation", "activeTab", "tabs"],
+  "icons": {
+    "32": "images/extension-32.png",
+    "48": "images/extension-48.png",
+    "128": "images/extension-128.png"
+  },
+  "action": {
+    "default_icon": "images/extension-128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://meet.google.com/*"],
+      "all_frames": true,
+      "js": [
+        "./content.js",
+        "./message_passer.js",
+        "./close_caption_extraction.js"
+      ],
+      "css": ["./index.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "options.html",
+  "content_security_policy": {
+    "script-src": ["self", "unsafe-eval"],
+    "object-src": ["self"]
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["index.html", "/static/*", "finder.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

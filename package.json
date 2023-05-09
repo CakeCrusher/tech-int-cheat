@@ -1,0 +1,67 @@
+{
+  "name": "tech-int-cheat",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.12.3",
+    "@testing-library/jest-dom": "^5.9.0",
+    "@testing-library/react": "^10.2.1",
+    "@testing-library/user-event": "^12.0.2",
+    "jotai": "^0.14.4",
+    "prettier": "^2.2.0",
+    "react": "18.2.0",
+    "react-beautiful-dnd": "^13.0.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^3.0.0",
+    "react-scripts": "4.0.0",
+    "typescript": "^3.9.5",
+    "use-debounce": "^5.1.0",
+    "uuid": "^8.3.1",
+    "web-vitals": "^0.2.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "npm run lint && cross-env INLINE_RUNTIME_CHUNK=false react-scripts build",
+    "watch": "node scripts/watch.js",
+    "lint": "eslint --fix --no-error-on-unmatched-pattern -c ./.eslintrc.js \"**/*.ts*\" \"./public/content.js\"",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/jest": "^25.0.0",
+    "@types/node": "^12.0.0",
+    "@types/react": "^16.9.0",
+    "@types/react-beautiful-dnd": "^13.0.0",
+    "@types/react-copy-to-clipboard": "^4.3.0",
+    "@types/react-dom": "^16.9.0",
+    "@types/uuid": "^8.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.13.0",
+    "@typescript-eslint/parser": "^4.13.0",
+    "cross-env": "^7.0.2",
+    "customize-cra": "^1.0.0",
+    "eslint": "^7.17.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.22.0",
+    "react-app-rewired": "^2.1.6",
+    "source-map-explorer": "^2.5.0"
+  }
+}
