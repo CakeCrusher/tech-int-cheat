@@ -1,3 +1,20 @@
+#rootContainer {
+  position: relative;
+  pointer-events: auto;
+}
+.handleContainer {
+  /* it should span the entire width and all items inside will be vertically and horizontally aligned */
+  position: relative;
+  display: flex;
+  top: -10px;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  /* it should be 40px tall */
+  height: 40px;
+}
+
 #chatContainer {
   display: flex;
   flex-direction: column;

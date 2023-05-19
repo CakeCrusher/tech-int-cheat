@@ -19,7 +19,7 @@ const dataToSend = (data) => {
       chrome.tabs.sendMessage(tab.id, data);
     });
   });
-}
+};
 
 console.log("Background!!");
 
@@ -28,7 +28,7 @@ let chatGptResponses = {}; // { meetId: { generatedResponse, startChatIndex, end
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // if request is of type CURRENT_CHAT then concat on the ticId
   if (request.type === "CURRENT_CHAT") {
-    console.log("CURRENT_CHAT", request.data.chat)
+    console.log("CURRENT_CHAT", request.data.chat);
     const meetId = request.data.meetId;
     const passedChat = request.data.chat;
     if (!chats[meetId]) {
@@ -84,7 +84,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       }
     }
 
-    console.log("preprocessedChatSlice", preprocessedChatSlice)
+    console.log("preprocessedChatSlice", preprocessedChatSlice);
 
     // send the preprocessedChatSlice to the backend https://635f-68-234-232-23.ngrok.io/infer_response and pass the preprocessedChatSlice as the json body
     const response = await fetch(
@@ -99,13 +99,13 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       }
     );
     const responseJson = await response.json();
-    console.log("responseJson", responseJson)
+    console.log("responseJson", responseJson);
     const generatedResponse = responseJson.response;
-    
+
     // if response fails then send a message for FAILED_RESPONSE
     if (!generatedResponse) {
       dataToSend({
-        type: "FAILED_RESPONSE"
+        type: "FAILED_RESPONSE",
       });
       return;
     } else {
@@ -120,7 +120,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         data: chatGptResponses[meetId],
       });
     }
-
   }
   // if request is of type GET_RESPONSE then send the response back to the popup
   if (request.type === "GET_CHATGPT_RESPONSE") {

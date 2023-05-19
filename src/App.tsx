@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import Button from "@mui/material/Button";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import LoadingButton from "@mui/lab/LoadingButton";
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import "./styles/main.css";
 
 export const App = (): JSX.Element => {
@@ -8,6 +10,7 @@ export const App = (): JSX.Element => {
   const [startChatIndex, setStartChatIndex] = useState<number | null>(null);
   const [endChatIndex, setEndChatIndex] = useState<number | null>(null);
   const [response, setResponse] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const handleIncomingMessageFromPage = (event: any) => {
     console.log("event", event.data);
     if (event.data.type === "FULL_CURRENT_CHATS") {
@@ -19,10 +22,12 @@ export const App = (): JSX.Element => {
     }
     // if type is CHATGPT_RESPONSE then set response
     if (event.data.type === "CHATGPT_RESPONSE") {
+      setLoading(false);
       setResponse(event.data.data);
     }
     // if it is a FAILED_RESPONSE then set response to "(Sorry response failed to generate please rejoin the meet and try again)"
     if (event.data.type === "FAILED_RESPONSE") {
+      setLoading(false);
       setResponse({
         generatedResponse:
           "(Sorry response failed to generate please rejoin the meet and try again)",
@@ -32,7 +37,7 @@ export const App = (): JSX.Element => {
     }
   };
   useEffect(() => {
-    // trigger parent.postMessage({ type: "GET_CHATGPT_RESPONSE", data: { meetId } }, "*"); after one second has passed
+    // trigger parent.postMessage({ type: "GET_CHATGPT_RESPONSE", data: { meetId } }, "*"); after 500ms has passed
     setTimeout(() => {
       parent.postMessage(
         { type: "GET_CHATGPT_RESPONSE", data: { meetId } },
@@ -73,14 +78,20 @@ export const App = (): JSX.Element => {
       },
       "*"
     );
+    setLoading(true);
     setStartChatIndex(null);
     setEndChatIndex(null);
   };
 
   return (
-    <div>
-      <Button variant="contained">Hello World</Button>
-      <h1>tech-int-cheat</h1>
+    <div id="rootContainer">
+      {/* create a div that covers with classname handleContainer that contains DragIndicatorIcon of size large rotated 90 degrees and of color black */}
+      <div className="handleContainer">
+        <DragIndicatorIcon
+          sx={{ fontSize: "large", transform: "rotate(90deg)", color: "black" }}
+        />
+      </div>
+      <h2 style={{ margin: 0, padding: 0 }}>tech-int-cheat</h2>
       <div id="chatContainer">
         {chat.map((chatInstance: any, index: number) => {
           return (
@@ -112,13 +123,16 @@ export const App = (): JSX.Element => {
           {endChatIndex !== null && chat[endChatIndex].content}
         </strong>
       </div>
-      <button
+      <LoadingButton
+        size="small"
         onClick={generateResponse}
-        id="gernerateResponse"
-        disabled={!Boolean(startChatIndex !== null && endChatIndex !== null)}
+        endIcon={<AutoFixHighIcon />}
+        loading={loading}
+        loadingPosition="end"
+        variant="contained"
       >
         generate response
-      </button>
+      </LoadingButton>
       <div>
         Response indexes:{" "}
         <strong id="responseStartContentEx">
