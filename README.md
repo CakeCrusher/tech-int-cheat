@@ -5,8 +5,7 @@ A chrome extension that pairs with OpenAI generative models (soon ChatGTP) to ch
 
 ## Demo
 
-
-https://user-images.githubusercontent.com/37946988/230748213-d10e9979-faa5-40b4-a622-396dfd877876.mp4
+https://github.com/CakeCrusher/tech-int-cheat/assets/37946988/bb0ce69c-398c-4ddb-bc54-d838a4fddc3e
 
 ## How it works
 Currently the extension only works on Google Meet since it only has been written to use the Google Meet closed captions API,
