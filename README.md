@@ -38,7 +38,7 @@ Clone the [extension](https://github.com/CakeCrusher/tech-int-cheat) and [backen
 
 ### Extension Setup
 - Install dependencies with `npm install`
-- Build the extension with `npm run build` or `npm run start` (note: Node supported version: 16.20.0)
+- Build the extension with `npm run build` or `npm run watch` (note: Node supported version: 16.20.0)
 - Go to your browser's extension page
 - Toggle developer mode
 - Import unpacked extension
