@@ -37,10 +37,12 @@ Currently the extension only works on Google Meet since it only has been written
 Clone the [extension](https://github.com/CakeCrusher/tech-int-cheat) and [backend server](https://github.com/CakeCrusher/tech-int-cheat-backend) repos.
 
 ### Extension Setup
+- Install dependencies with `npm install`
+- Build the extension with `npm run build` or `npm run start` (note: Node supported version: 16.20.0)
 - Go to your browser's extension page
 - Toggle developer mode
 - Import unpacked extension
-- Select the directory for the frontend project
+- Select the generated `./build` folder in the extension repo
 
 You may need to change the target for the request away from the AWS server to your local server, depending on what you're doing. If you need to do this, your local python server address/URL is probably `http://127.0.0.1:5000/infer_response`. Simply swap that out for the AWS URL.
 
