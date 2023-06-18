@@ -9,19 +9,24 @@ const randomId = () => {
 };
 
 if (document.location.href.match('https://zoom.us/*')) {
-    console.log('STARTING IN ZOOM');
-
     const chat = [];
     const tempChat = {};
 
-    setInterval(function () {
+    const myElement = document.getElementsByClassName(
+        'live-transcription-subtitle__item',
+    );
+
+    var observer = new MutationObserver(function (mutations) {
+        if (myElement?.length < 1) {
+            return;
+        }
+
         try {
             const chatDiv = document.getElementsByClassName(
                 'live-transcription-subtitle__item',
             );
 
             if (!chatDiv || chatDiv[0]?.innerHTML?.length < 1) {
-                console.log('no chatDivs');
                 return;
             }
             // debugger;
@@ -63,10 +68,6 @@ if (document.location.href.match('https://zoom.us/*')) {
             // chat[chatIndex].content = chatInstance.content;
             // } else {
             chat.push(chatInstance);
-            console.log(
-                `//speakerContainers.forEach ~ chatInstance:`,
-                chatInstance,
-            );
             // speaker.setAttribute('ticId', ticId);
             // }
             // });
@@ -78,21 +79,30 @@ if (document.location.href.match('https://zoom.us/*')) {
             });
             // send chat to service worker
             const meetId = window.location.href.split('/')[4];
-            console.log('sending chat', chat);
             chrome.runtime.sendMessage({
                 type: 'CURRENT_CHAT',
                 data: { chat, meetId },
                 clientType: 'ZOOM',
             });
-        } catch (e) {
-            // console.log("no CC", e);
-        }
-    }, 1000);
+        } catch (e) {}
+    });
+
+    observer.observe(document, {
+        attributes: false,
+        childList: true,
+        characterData: false,
+        subtree: true,
+    });
 } else if (document.location.href.match('https://meet.google.com/*')) {
     // repeat every 1 second
     const chat = [];
     const tempChat = {}; // {ticId: {content: ["", ...], timeModified: Date }}
-    setInterval(function () {
+    const myElement = document.getElementsByClassName('TBMuR bj4p3b');
+
+    var observer = new MutationObserver(function (mutations) {
+        if (myElement?.length < 1) {
+            return;
+        }
         try {
             const chatDivs = document.querySelectorAll('div.iOzk7');
             const ccContainer = Array.from(chatDivs).filter((div) => {
@@ -107,7 +117,6 @@ if (document.location.href.match('https://zoom.us/*')) {
                 const ticId = ticIdOnDiv ? ticIdOnDiv : randomId();
                 const name = speaker.querySelector('.jxFHg').textContent;
                 const content = speaker.querySelector('.iTTPOb.VbkSUe');
-                console.log(`speakerContainers.forEach ~ content:`, content);
                 // for each span within content that does not contain ticAdded, add its text content to the tempChat[ticId].content array and mark it as added by adding an attribute ticAdded to it
                 // for the last span replace the last element of the tempChat[ticId].content array with the text content of the last span
                 if (!tempChat[ticId]) {
@@ -150,14 +159,17 @@ if (document.location.href.match('https://zoom.us/*')) {
             });
             // send chat to service worker
             const meetId = window.location.href.split('?')[0].split('/').pop();
-            console.log('sending chat', chat);
             chrome.runtime.sendMessage({
                 type: 'CURRENT_CHAT',
                 data: { chat, meetId },
                 clientType: 'GOOGLE MEET',
             });
-        } catch (e) {
-            // console.log("no CC", e);
-        }
-    }, 1000);
+        } catch (e) {}
+    });
+    observer.observe(document, {
+        attributes: false,
+        childList: true,
+        characterData: false,
+        subtree: true,
+    });
 }
