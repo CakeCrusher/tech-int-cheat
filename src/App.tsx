@@ -14,12 +14,24 @@ export const App = (): JSX.Element => {
 
     const handleIncomingMessageFromPage = (event: any) => {
         console.log('event', event.data);
-        debugger;
         if (event.data.type === 'FULL_CURRENT_CHATS') {
-            if (!meetId) {
-                setMeetId(event.data.data.meetId);
+            if (
+                document.location.href.match('https://zoom.us/*') &&
+                event.data.clientType === 'ZOOM'
+            ) {
+                if (!meetId) {
+                    setMeetId(event.data.data.meetId);
+                }
+                setChat(event.data.data.chats[event.data.data.meetId]);
+            } else if (
+                document.location.href.match('https://meet.google.com/*') &&
+                event.data.clientType === 'GOOGLE MEET'
+            ) {
+                if (!meetId) {
+                    setMeetId(event.data.data.meetId);
+                }
+                setChat(event.data.data.chats[event.data.data.meetId]);
             }
-            setChat(event.data.data.chats[event.data.data.meetId]);
         }
         // if type is CHATGPT_RESPONSE then set response
         if (event.data.type === 'CHATGPT_RESPONSE') {
@@ -101,7 +113,7 @@ export const App = (): JSX.Element => {
             </div>
             <h2 style={{ margin: 0, padding: 0 }}>tech-int-cheat</h2>
             <div id='chatContainer'>
-                {chat.map((chatInstance: any, index: number) => {
+                {chat?.map((chatInstance: any, index: number) => {
                     console.log('about to draw', chatInstance, index);
                     return (
                         <div
