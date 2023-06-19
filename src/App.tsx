@@ -162,15 +162,20 @@ export const App = (): JSX.Element => {
             </div>
             <div id='selectedIndexes'>
                 <div>
-                    {startChatIndex !== null ? 'Selection:' : null}
-                    <strong id='startContentEx'>
-                        {startChatIndex !== null &&
-                            chat[startChatIndex]?.content}
-                        ...
-                    </strong>{' '}
-                    <strong id='endContentEx'>
-                        {endChatIndex !== null && chat[endChatIndex]?.content}
-                    </strong>
+                    {startChatIndex !== null ? (
+                        <>
+                            'Selection:'
+                            <strong id='startContentEx'>
+                                {startChatIndex !== null &&
+                                    chat[startChatIndex]?.content}
+                                ...
+                            </strong>{' '}
+                            <strong id='endContentEx'>
+                                {endChatIndex !== null &&
+                                    chat[endChatIndex]?.content}
+                            </strong>
+                        </>
+                    ) : null}
                 </div>
             </div>
             <div id='generateResponse'>
@@ -194,18 +199,22 @@ export const App = (): JSX.Element => {
                     textAlign: 'center',
                 }}
             >
-                {response ? 'Responding to:' : null}
-                <strong id='responseStartContentEx'>
-                    {response &&
-                        response.startChatIndex !== null &&
-                        chat[response.startChatIndex]?.content}
-                </strong>{' '}
-                {response ? '...' : null}
-                <strong id='responseEndContentEx'>
-                    {response &&
-                        response.endChatIndex !== null &&
-                        chat[response.endChatIndex]?.content}
-                </strong>
+                {response && !startChatIndex ? (
+                    <>
+                        'Responding to:'
+                        <strong id='responseStartContentEx'>
+                            {response &&
+                                response.startChatIndex !== null &&
+                                chat[response.startChatIndex]?.content}
+                        </strong>{' '}
+                        {response ? '...' : null}
+                        <strong id='responseEndContentEx'>
+                            {response &&
+                                response.endChatIndex !== null &&
+                                chat[response.endChatIndex]?.content}
+                        </strong>
+                    </>
+                ) : null}
             </div>
             <div id='responseContainer'>
                 {(response && response.generatedResponse) ||

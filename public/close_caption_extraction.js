@@ -9,7 +9,7 @@ const randomId = () => {
 };
 
 if (document.location.href.match('https://zoom.us/*')) {
-    const chat = [];
+    let chat = [];
     const chatDiv = document.getElementsByClassName(
         'live-transcription-subtitle__item',
     );
@@ -35,7 +35,15 @@ if (document.location.href.match('https://zoom.us/*')) {
                 content: content,
                 ticId,
             };
+
             chat.push(chatInstance);
+
+            // Remove duplicates
+            chat = chat.filter(
+                (value, index, self) =>
+                    index ===
+                    self.findIndex((t) => t.content.startsWith(value.content)),
+            );
 
             // send chat to service worker
             const meetId = window.location.href.split('/')[4];
@@ -73,7 +81,7 @@ if (document.location.href.match('https://zoom.us/*')) {
                 const ticId = ticIdOnDiv ? ticIdOnDiv : randomId();
                 const name = speaker.querySelector('.jxFHg').textContent;
                 const content = speaker.querySelector('.iTTPOb.VbkSUe');
-                // ticAdded is a property on the HTML that Google adds. The
+                // ticAdded is a property on the HTML that Google adds. It's added so that captions can be dynamically added to the user in the same box, without deleting prior messages. The ticAdded becomes true once the new span with the new text is added to the div wrapper.
                 // for each span within content that does not contain ticAdded, add its text content to the tempChat[ticId].content array and mark it as added by adding an attribute ticAdded to it
                 // for the last span replace the last element of the tempChat[ticId].content array with the text content of the last span
                 if (!tempChat[ticId]) {
