@@ -13,8 +13,10 @@ Currently the extension only works on Google Meet and Zoom (only in the Zoom bro
 1. Install the extension via the Chrome Web Store
 2. Log into a Google Meet or Zoom meeting and enable Closed Captioning
    1. (IMPORTANT!) If you're using Zoom, the host will need to enable a few settings for the extension to work. They need to make these changes from their Zoom.us profile settings page not the desktop app. The desktop app doesn't have these options.
-   2. The meeting host will need to enable the Live Transcription options (Closed Caption)
-   3. The meeting host will need to enable the option to let you to join the meeting from your browser, not from the desktop app, since this is a browser extension only.
+   2. The meeting host will need to enable the Live Transcription options (Closed Captions). This is how the extension knows what is being said in the conversation. ![image](https://github.com/CakeCrusher/tech-int-cheat/assets/17897003/310c4440-54f9-492e-beca-739273968669)
+
+   3. The meeting host will need to enable the option to let you to join the meeting from your browser, not from the desktop app, since this is a browser extension only. ![image](https://github.com/CakeCrusher/tech-int-cheat/assets/17897003/7522a957-31cc-49ae-9926-4a1926092f64)
+
 3. Speak into the microphone
 4. Open the Tech-Int-Cheat extension on the browser toolbar and you'll see text bubbles.
 5. Select which text you'd like to be sent to ChatGPT
