@@ -16,7 +16,7 @@ export const App = (): JSX.Element => {
     console.log("event", event.data);
     if (event.data.type === "FULL_CURRENT_CHATS") {
       if (
-        document.location.href.match("https://zoom.us/*") &&
+        document.location.href.match(/zoom/) &&
         event.data.clientType === "ZOOM"
       ) {
         if (!meetId) {

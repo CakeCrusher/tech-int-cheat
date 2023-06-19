@@ -87,7 +87,7 @@ function main() {
         chrome.storage.sync.set({
           currentPage: window.location.hostname,
         });
-        const iframeDoc = iframe?.contentWindow?.document;
+        const iframeDoc = iframe.contentWindow.document;
         iframeDoc.write(reactHTML);
         iframeDoc.close();
         dragElement(document.getElementById("extension-window"));

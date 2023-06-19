@@ -8,7 +8,7 @@ const randomId = () => {
     return id;
 };
 
-if (document.location.href.match('https://zoom.us/*')) {
+if (document.location.href.match(/zoom/)) {
     let chat = [];
     const chatDiv = document.getElementsByClassName(
         'live-transcription-subtitle__item',
@@ -38,12 +38,20 @@ if (document.location.href.match('https://zoom.us/*')) {
 
             chat.push(chatInstance);
 
-            // Remove duplicates
-            chat = chat.filter(
-                (value, index, self) =>
-                    index ===
-                    self.findIndex((t) => t.content.startsWith(value.content)),
-            );
+            // Remove duplicates if the current message starts with the same content as the previous message.
+            if (chat.length > 1) {
+                const lastMessage = chat[chat.length - 1];
+                const secondToLastMessage = chat[chat.length - 2];
+                if (
+                    lastMessage.content.startsWith(
+                        secondToLastMessage.content,
+                    )
+                ) {
+                    // remove the second to last message
+                    chat.splice(chat.length - 2, 1);
+                }
+
+            }
 
             // send chat to service worker
             const meetId = window.location.href.split('/')[4];

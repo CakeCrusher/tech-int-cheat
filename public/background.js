@@ -43,10 +43,19 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             if (chatIndex > -1) {
                 chat[chatIndex].content = passedChatInstance.content;
             } else {
-                chat.push(passedChatInstance);
+                // if passedChatInstance.content start with the chat[chat.length - 1].content then replace the content of the last message with the new content
+                if (
+                    chat.length > 0 &&
+                    passedChatInstance.content.startsWith(
+                        chat[chat.length - 1].content,
+                    )
+                ) {
+                    chat[chat.length - 1] = passedChatInstance;
+                } else {
+                    chat.push(passedChatInstance);
+                }
             }
         });
-        console.log(request.data);
         // get the tab url of each tab
         chrome.tabs.query({}, function (tabs) {
             tabs.forEach((tab) => {
