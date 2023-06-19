@@ -164,7 +164,7 @@ export const App = (): JSX.Element => {
                 <div>
                     {startChatIndex !== null ? (
                         <>
-                            'Selection:'
+                            Selection:
                             <strong id='startContentEx'>
                                 {startChatIndex !== null &&
                                     chat[startChatIndex]?.content}
@@ -201,7 +201,7 @@ export const App = (): JSX.Element => {
             >
                 {response && !startChatIndex ? (
                     <>
-                        'Responding to:'
+                        Responding to:
                         <strong id='responseStartContentEx'>
                             {response &&
                                 response.startChatIndex !== null &&
