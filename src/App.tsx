@@ -43,7 +43,7 @@ export const App = (): JSX.Element => {
             setLoading(false);
             setResponse({
                 generatedResponse:
-                    '(Sorry response failed to generate please rejoin the meet and try again)',
+                    'Sorry, there was a problem! Please try rejoining the meeting.',
                 startChatIndex: null,
                 endChatIndex: null,
             });
@@ -111,15 +111,40 @@ export const App = (): JSX.Element => {
                     }}
                 />
             </div>
-            <h2 style={{ margin: 0, padding: 0 }}>tech-int-cheat</h2>
+            <div
+                style={{
+                    margin: 0,
+                }}
+            >
+                <h2
+                    style={{
+                        display: 'flex',
+                        margin: 0,
+                        justifyContent: 'center',
+                    }}
+                >
+                    Tech Interview Cheat
+                </h2>
+                <h5
+                    style={{
+                        display: 'flex',
+                        margin: 0,
+                        justifyContent: 'center',
+                        paddingBottom: '5px',
+                    }}
+                >
+                    Coding is not about memorization
+                </h5>
+            </div>
             <div id='chatContainer'>
-                {chat?.map((chatInstance: any, index: number) => {
-                    console.log('about to draw', chatInstance, index);
-                    return (
-                        <div
-                            onClick={() => selectChatInstance(index)}
-                            key={chatInstance.ticId}
-                            className={`
+                {/* This extra div is to make the content in the parent div not need to be reversed, due to the 'column-reverse in #chatContainer  */}
+                <div>
+                    {chat?.map((chatInstance: any, index: number) => {
+                        return (
+                            <div
+                                onClick={() => selectChatInstance(index)}
+                                key={chatInstance.ticId}
+                                className={`
                 ${
                     chatInstance.role.toUpperCase() === 'YOU'
                         ? 'youChatInstance'
@@ -127,50 +152,64 @@ export const App = (): JSX.Element => {
                 }
                   ${startChatIndex === index ? 'selectedChatStart' : ''}
                   ${endChatIndex === index ? 'selectedChatEnd' : ''}
-              `}
-                        >
-                            {chatInstance.content}
-                        </div>
-                    );
-                })}
+                  `}
+                            >
+                                {chatInstance?.content}
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
-            <div>
-                Selected indexes:{' '}
-                <strong id='startContentEx'>
-                    {startChatIndex !== null && chat[startChatIndex].content}
-                </strong>{' '}
-                ...
-                <strong id='endContentEx'>
-                    {endChatIndex !== null && chat[endChatIndex].content}
-                </strong>
+            <div id='selectedIndexes'>
+                <div>
+                    {startChatIndex !== null ? 'Selection:' : null}
+                    <strong id='startContentEx'>
+                        {startChatIndex !== null &&
+                            chat[startChatIndex]?.content}
+                        ...
+                    </strong>{' '}
+                    <strong id='endContentEx'>
+                        {endChatIndex !== null && chat[endChatIndex]?.content}
+                    </strong>
+                </div>
             </div>
-            <LoadingButton
-                size='small'
-                onClick={generateResponse}
-                endIcon={<AutoFixHighIcon />}
-                loading={loading}
-                loadingPosition='end'
-                variant='contained'
+            <div id='generateResponse'>
+                <LoadingButton
+                    size='small'
+                    onClick={generateResponse}
+                    endIcon={<AutoFixHighIcon />}
+                    loading={loading}
+                    loadingPosition='end'
+                    variant='contained'
+                >
+                    Ask AI
+                </LoadingButton>
+            </div>
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    paddingBottom: '5px',
+                    flexDirection: 'column',
+                    textAlign: 'center',
+                }}
             >
-                generate response
-            </LoadingButton>
-            <div>
-                Response indexes:{' '}
+                {response ? 'Responding to:' : null}
                 <strong id='responseStartContentEx'>
                     {response &&
                         response.startChatIndex !== null &&
-                        chat[response.startChatIndex].content}
+                        chat[response.startChatIndex]?.content}
                 </strong>{' '}
-                ...
+                {response ? '...' : null}
                 <strong id='responseEndContentEx'>
                     {response &&
                         response.endChatIndex !== null &&
-                        chat[response.endChatIndex].content}
+                        chat[response.endChatIndex]?.content}
                 </strong>
             </div>
             <div id='responseContainer'>
                 {(response && response.generatedResponse) ||
-                    '(Response will show here)'}
+                    'Response will show here'}
             </div>
         </div>
     );

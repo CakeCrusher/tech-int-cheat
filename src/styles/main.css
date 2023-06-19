@@ -1,69 +1,82 @@
 #rootContainer {
-  position: relative;
-  pointer-events: auto;
+    position: relative;
+    pointer-events: auto;
 }
 .handleContainer {
-  /* it should span the entire width and all items inside will be vertically and horizontally aligned */
-  position: relative;
-  display: flex;
-  top: -10px;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-  /* it should be 40px tall */
-  height: 40px;
+    /* it should span the entire width and all items inside will be vertically and horizontally aligned */
+    position: relative;
+    display: flex;
+    top: -10px;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    /* it should be 40px tall */
+    height: 40px;
 }
 
 #chatContainer {
-  display: flex;
-  flex-direction: column;
-  background-color: #3c4043;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  max-height: 300px;
-  overflow: auto;
+    display: flex;
+    /* The column-reverse is to keep the box scrolled to the bottom automatically. */
+    flex-direction: column-reverse;
+    background-color: #3c4043;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    height: 300px;
+    overflow: auto;
 }
 .youChatInstance {
-  background-color: #395163;
-  align-self: flex-end;
+    background-color: #395163;
+    align-self: flex-end;
 }
 .interviewerChatInstance {
-  background-color: #4c5256;
-  align-self: flex-start;
+    background-color: #4c5256;
+    align-self: flex-start;
 }
 .youChatInstance,
 .interviewerChatInstance {
-  color: #fff;
-  padding: 5px;
-  border-radius: 5px;
-  margin-bottom: 5px;
-  cursor: pointer;
-  opacity: 0.8;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    opacity: 0.8;
 }
 .youChatInstance:hover,
 .interviewerChatInstance:hover {
-  opacity: 1;
+    opacity: 1;
 }
 .selectedChatStart {
-  border-top: 5px solid #09ff00;
+    border-top: 5px solid #09ff00;
 }
 .selectedChatEnd {
-  border-bottom: 5px solid #09ff00;
+    border-bottom: 5px solid #09ff00;
 }
 #gernerateResponse {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
+}
+#selectedIndexes {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 5px;
+}
+#generateResponse {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 5px;
 }
 #responseContainer {
-  background-color: #b2cbdd;
-  padding: 10px;
-  white-space: pre-wrap;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  max-height: 300px;
-  overflow: auto;
+    background-color: #b2cbdd;
+    padding: 10px;
+    white-space: pre-wrap;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    max-height: 300px;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
 }
 .hidden {
-  display: none;
+    display: none;
 }
