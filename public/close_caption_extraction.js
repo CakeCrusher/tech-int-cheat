@@ -10,75 +10,36 @@ const randomId = () => {
 
 if (document.location.href.match('https://zoom.us/*')) {
     const chat = [];
-    const tempChat = {};
-
-    const myElement = document.getElementsByClassName(
+    const chatDiv = document.getElementsByClassName(
         'live-transcription-subtitle__item',
     );
 
     var observer = new MutationObserver(function (mutations) {
-        if (myElement?.length < 1) {
-            return;
-        }
-
         try {
-            const chatDiv = document.getElementsByClassName(
-                'live-transcription-subtitle__item',
-            );
-
-            if (!chatDiv || chatDiv[0]?.innerHTML?.length < 1) {
+            if (chatDiv?.length < 1) {
                 return;
             }
-            // debugger;
 
-            // const ccContainer = Array.from(chatDivs).filter((div) => {
-            //     return div.style.display != 'none';
-            // })[0];
-            // let speakerContainers =
-            //     ccContainer.querySelectorAll('.TBMuR.bj4p3b');
-            // create a function that creates a random id of length 10
-
-            // speakerContainers.forEach((speaker) => {
-            // const ticIdOnDiv = speaker.getAttribute('ticId');
+            // We're grabbing directly from the HTML so we won't know who is speaking, so we're defaulting to a single user role.
+            const role = 'assistant';
             const ticId = randomId();
-            // We're grabbing directly from the HTML so we don't know who is speaking. So, we're defaulting to one user role.
-            const name = 'assistant';
             const content = chatDiv[0].innerHTML;
 
+            // Ignore the default message from Zoom.
             if (content === 'Live Transcription is turned on') {
                 return;
             }
 
-            if (!tempChat[ticId]) {
-                tempChat[ticId] = { content: [], timeModified: Date.now() };
-            }
-
-            tempChat[ticId].content.push(content);
-            tempChat[ticId].timeModified = Date.now();
-
             const chatInstance = {
-                role: name,
-                content: tempChat[ticId].content,
+                role: role,
+                content: content,
                 ticId,
             };
-            // if (ticIdOnDiv) {
-            // const chatIndex = chat.findIndex(
-            //     (chatInstance) => chatInstance.ticId === ticId,
-            // );
-            // chat[chatIndex].content = chatInstance.content;
-            // } else {
             chat.push(chatInstance);
-            // speaker.setAttribute('ticId', ticId);
-            // }
-            // });
-            // cleanup tempChat if any ticId has not been modified in the last 10 seconds
-            Object.keys(tempChat).forEach((ticId) => {
-                if (Date.now() - tempChat[ticId].timeModified > 10000) {
-                    delete tempChat[ticId];
-                }
-            });
+
             // send chat to service worker
             const meetId = window.location.href.split('/')[4];
+
             chrome.runtime.sendMessage({
                 type: 'CURRENT_CHAT',
                 data: { chat, meetId },
@@ -97,12 +58,7 @@ if (document.location.href.match('https://zoom.us/*')) {
     // repeat every 1 second
     const chat = [];
     const tempChat = {}; // {ticId: {content: ["", ...], timeModified: Date }}
-    const myElement = document.getElementsByClassName('TBMuR bj4p3b');
-
-    var observer = new MutationObserver(function (mutations) {
-        if (myElement?.length < 1) {
-            return;
-        }
+    setInterval(function () {
         try {
             const chatDivs = document.querySelectorAll('div.iOzk7');
             const ccContainer = Array.from(chatDivs).filter((div) => {
@@ -117,6 +73,7 @@ if (document.location.href.match('https://zoom.us/*')) {
                 const ticId = ticIdOnDiv ? ticIdOnDiv : randomId();
                 const name = speaker.querySelector('.jxFHg').textContent;
                 const content = speaker.querySelector('.iTTPOb.VbkSUe');
+                // ticAdded is a property on the HTML that Google adds. The
                 // for each span within content that does not contain ticAdded, add its text content to the tempChat[ticId].content array and mark it as added by adding an attribute ticAdded to it
                 // for the last span replace the last element of the tempChat[ticId].content array with the text content of the last span
                 if (!tempChat[ticId]) {
@@ -165,11 +122,5 @@ if (document.location.href.match('https://zoom.us/*')) {
                 clientType: 'GOOGLE MEET',
             });
         } catch (e) {}
-    });
-    observer.observe(document, {
-        attributes: false,
-        childList: true,
-        characterData: false,
-        subtree: true,
-    });
+    }, 1000);
 }
