@@ -17,6 +17,7 @@
     {
       "matches": [
         "https://meet.google.com/*",
+        "*://zoom.com/*",
         "*://zoom.us/*",
         "*://*.zoom.com/*",
         "*://*.zoom.us/*"
