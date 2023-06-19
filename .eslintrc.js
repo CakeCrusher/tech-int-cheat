@@ -24,7 +24,7 @@ module.exports = {
     },
     plugins: ['react', '@typescript-eslint'],
     rules: {
-        endOfLine: 'auto',
+        endOfLine: off,
         // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
         // e.g. "@typescript-eslint/explicit-function-return-type": "off",
     },
