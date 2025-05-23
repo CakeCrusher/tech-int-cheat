@@ -102,6 +102,40 @@
       #gernerateResponse {
         margin-bottom: 10px;
       }
+      
+      .export-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+      
+      #exportChat, #copyChat {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        flex: 1;
+      }
+      
+      #exportChat:hover, #copyChat:hover {
+        background-color: #45a049;
+      }
+      
+      #exportChat:disabled, #copyChat:disabled {
+        background-color: #666;
+        cursor: not-allowed;
+      }
+      
+      #copyChat {
+        background-color: #2196f3;
+      }
+      
+      #copyChat:hover {
+        background-color: #1976d2;
+      }
+      
       #responseContainer {
         background-color: #b2cbdd;
         padding: 10px;
@@ -126,6 +160,10 @@
       <strong id="endContentEx"></strong>
     </div>
     <button id="gernerateResponse" disabled>generate response</button>
+    <div class="export-buttons">
+      <button id="exportChat" disabled>Export JSON</button>
+      <button id="copyChat" disabled>Copy to Clipboard</button>
+    </div>
     <div>
       Response indexes: <strong id="responseStartContentEx"></strong> ...
       <strong id="responseEndContentEx"></strong>

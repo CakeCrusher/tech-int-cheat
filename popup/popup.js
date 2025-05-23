@@ -68,6 +68,71 @@ const createChatMessageElement = (chatInstance) => {
   return messageDiv;
 };
 
+const formatChatForExport = () => {
+  return chat.map(chatInstance => ({
+    name: chatInstance.role,
+    content: chatInstance.content
+  }));
+};
+
+const exportChatAsJSON = () => {
+  try {
+    if (!chat || chat.length === 0) {
+      alert('No chat data available to export');
+      return;
+    }
+    
+    const exportData = formatChatForExport();
+    const jsonString = JSON.stringify(exportData, null, 2);
+    
+    // Create a blob and download link
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    // Create a temporary download link
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `chat-export-${meetId || 'unknown'}-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+  } catch (error) {
+    console.error('Error exporting chat:', error);
+    alert('Error exporting chat. Please try again.');
+  }
+};
+
+const copyChatToClipboard = async () => {
+  try {
+    if (!chat || chat.length === 0) {
+      alert('No chat data available to copy');
+      return;
+    }
+    
+    const exportData = formatChatForExport();
+    const jsonString = JSON.stringify(exportData, null, 2);
+    
+    await navigator.clipboard.writeText(jsonString);
+    
+    // Temporarily change button text to show success
+    const copyBtn = document.getElementById('copyChat');
+    const originalText = copyBtn.textContent;
+    copyBtn.textContent = 'Copied!';
+    copyBtn.style.backgroundColor = '#4caf50';
+    
+    setTimeout(() => {
+      copyBtn.textContent = originalText;
+      copyBtn.style.backgroundColor = '#2196f3';
+    }, 1500);
+    
+  } catch (error) {
+    console.error('Error copying to clipboard:', error);
+    alert('Error copying to clipboard. Please try again.');
+  }
+};
+
 const reactToSelectedChats = () => {
   // remove the class selectedChatStart and selectedChatEnd from all the divs
   const chatInstances = document.querySelectorAll(".chatMessage");
@@ -105,6 +170,9 @@ const reactToSelectedChats = () => {
 };
 
 const generateResponseBtn = document.getElementById("gernerateResponse");
+const exportChatBtn = document.getElementById("exportChat");
+const copyChatBtn = document.getElementById("copyChat");
+
 // add event listener to the button of id gernerateResponse
 generateResponseBtn.addEventListener("click", function () {
   // send a message to the service worker of type "GENERATE_RESPONSE" with the startChat and endChat
@@ -116,6 +184,12 @@ generateResponseBtn.addEventListener("click", function () {
   endChat = null;
   reactToSelectedChats();
 });
+
+// add event listener to the export chat button
+exportChatBtn.addEventListener("click", exportChatAsJSON);
+
+// add event listener to the copy chat button
+copyChatBtn.addEventListener("click", copyChatToClipboard);
 
 const selectChatInstance = (targetChatInstanceElement) => {
   // get ticId attribute from the targetChatInstanceElement
@@ -153,6 +227,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       speakers = request.data.speakers;
       assignSpeakerColors(speakers);
     }
+
+    // Enable/disable export buttons based on chat availability
+    const hasChat = chat && chat.length > 0;
+    exportChatBtn.disabled = !hasChat;
+    copyChatBtn.disabled = !hasChat;
 
     // if there is nothing inside the responseContainer.innerText then send a message to the service worker of type "GET_CHATGPT_RESPONSE"
     if (responseContainer.innerText.includes("(Response will show here)")) {
