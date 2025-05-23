@@ -48,13 +48,11 @@ const createChatMessageElement = (chatInstance) => {
     }
   }
   
-  // Create speaker name element (only show for others, not for current user)
-  if (!chatInstance.isCurrentUser) {
-    const speakerNameDiv = document.createElement("div");
-    speakerNameDiv.classList.add("speakerName");
-    speakerNameDiv.textContent = chatInstance.role;
-    messageDiv.appendChild(speakerNameDiv);
-  }
+  // Create speaker name element (show for ALL users now, including current user)
+  const speakerNameDiv = document.createElement("div");
+  speakerNameDiv.classList.add("speakerName");
+  speakerNameDiv.textContent = chatInstance.role;
+  messageDiv.appendChild(speakerNameDiv);
   
   // Create chat bubble
   const bubbleDiv = document.createElement("div");
@@ -164,21 +162,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       });
     }
 
+    // Clear the entire container and recreate all messages for consistent styling
+    chatContainer.innerHTML = '';
+    
+    // Recreate all messages with consistent styling
     chat.forEach((chatInstance) => {
-      const existingElement = document.querySelector(`[ticId="${chatInstance.ticId}"]`);
-      
-      if (!existingElement) {
-        // Create new message element
-        const messageElement = createChatMessageElement(chatInstance);
-        chatContainer.appendChild(messageElement);
-      } else {
-        // Update existing message content
-        const bubbleElement = existingElement.querySelector('.chatBubble');
-        if (bubbleElement) {
-          bubbleElement.textContent = chatInstance.content;
-        }
-      }
+      const messageElement = createChatMessageElement(chatInstance);
+      chatContainer.appendChild(messageElement);
     });
+    
+    // Reapply selection highlighting if any
+    reactToSelectedChats();
   }
   if (request.type === "CHATGPT_RESPONSE") {
     responseStartContentEx.innerText = chat[request.data.startChat].content;
