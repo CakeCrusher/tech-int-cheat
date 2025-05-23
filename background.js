@@ -1,6 +1,7 @@
 console.log("Background!!");
 
-let chats = {}; // { meetId: [ { ticId, role, content } ] }
+let chats = {}; // { meetId: [ { ticId, role, content, isCurrentUser } ] }
+let speakers = {}; // { meetId: [speakerNames] }
 let chatGptResponses = {}; // { meetId: { generatedResponse, startChat, endChat } }
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   // if request is of type CURRENT_CHAT then concat on the ticId
@@ -8,9 +9,17 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     console.log("CURRENT_CHAT", request.data.chat)
     const meetId = request.data.meetId;
     const passedChat = request.data.chat;
+    const passedSpeakers = request.data.speakers;
+    
     if (!chats[meetId]) {
       chats[meetId] = [];
     }
+    
+    // Update speakers list
+    if (passedSpeakers) {
+      speakers[meetId] = passedSpeakers;
+    }
+    
     const chat = chats[meetId];
     passedChat.forEach((passedChatInstance) => {
       const chatIndex = chat.findIndex(
@@ -18,11 +27,18 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       );
       if (chatIndex > -1) {
         chat[chatIndex].content = passedChatInstance.content;
+        chat[chatIndex].isCurrentUser = passedChatInstance.isCurrentUser;
       } else {
         chat.push(passedChatInstance);
       }
     });
-    chrome.runtime.sendMessage({ type: "FULL_CURRENT_CHATS", data: { chats } });
+    chrome.runtime.sendMessage({ 
+      type: "FULL_CURRENT_CHATS", 
+      data: { 
+        chats,
+        speakers: speakers[meetId] || []
+      } 
+    });
   }
   if (request.type === "GET_RESPONSE") {
     const { meetId, startChat, endChat } = request.data;
@@ -46,6 +62,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         chatSlice.splice(i + 1, 1);
       } else {
         delete currentChatInstance.ticId;
+        delete currentChatInstance.isCurrentUser;
         preprocessedChatSlice.push(currentChatInstance);
         i++;
       }

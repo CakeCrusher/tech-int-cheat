@@ -11,6 +11,7 @@ const randomId = () => {
 // repeat every 1 second
 const chat = [];
 const tempChat = {}; // {ticId: {content: string, timeModified: Date }}
+const speakers = new Set(); // Track all unique speakers
 setInterval(function () {
   try {
     const chatDivs = document.querySelectorAll("div.iOzk7");
@@ -27,6 +28,9 @@ setInterval(function () {
       const contentElement = speaker.querySelector(".bh44bd.VbkSUe");
       const content = contentElement ? contentElement.textContent.trim() : "";
       
+      // Track all speakers
+      speakers.add(name);
+      
       // Store or update content in tempChat
       if (!tempChat[ticId]) {
         tempChat[ticId] = { content: "", timeModified: Date.now() };
@@ -38,7 +42,12 @@ setInterval(function () {
         tempChat[ticId].timeModified = Date.now();
       }
       
-      const chatInstance = { role: name, content: tempChat[ticId].content, ticId };
+      const chatInstance = { 
+        role: name, 
+        content: tempChat[ticId].content, 
+        ticId,
+        isCurrentUser: name === "You"
+      };
       
       if (ticIdOnDiv) {
         const chatIndex = chat.findIndex(
@@ -64,7 +73,7 @@ setInterval(function () {
     const meetId = window.location.href.split("?")[0].split("/").pop();
     chrome.runtime.sendMessage({
       type: "CURRENT_CHAT",
-      data: { chat, meetId },
+      data: { chat, meetId, speakers: Array.from(speakers) },
     });
   } catch (e) {
     console.log("no CC", e);

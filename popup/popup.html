@@ -15,34 +15,81 @@
         margin-bottom: 10px;
         max-height: 300px;
         overflow: auto;
+        gap: 8px;
       }
-      .youChatInstance {
-        background-color: #395163;
-        align-self: flex-end;
-      }
-      .interviewerChatInstance {
-        background-color: #4c5256;
-        align-self: flex-start;
-      }
-      .youChatInstance,
-      .interviewerChatInstance {
-        color: #fff;
-        padding: 5px;
-        border-radius: 5px;
+      
+      .chatMessage {
+        display: flex;
+        flex-direction: column;
+        max-width: 80%;
         margin-bottom: 5px;
-        cursor: pointer;
+      }
+      
+      .chatMessage.currentUser {
+        align-self: flex-end;
+        align-items: flex-end;
+      }
+      
+      .chatMessage.otherUser {
+        align-self: flex-start;
+        align-items: flex-start;
+      }
+      
+      .speakerName {
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 2px;
         opacity: 0.8;
       }
-      .youChatInstance:hover,
-      .interviewerChatInstance:hover {
+      
+      .chatBubble {
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 12px;
+        cursor: pointer;
+        opacity: 0.8;
+        word-wrap: break-word;
+        position: relative;
+      }
+      
+      .chatBubble:hover {
         opacity: 1;
       }
-      .selectedChatStart {
+      
+      .currentUser .chatBubble {
+        background-color: #395163;
+        border-bottom-right-radius: 4px;
+      }
+      
+      .otherUser .chatBubble {
+        border-bottom-left-radius: 4px;
+      }
+      
+      /* Speaker colors - will be dynamically assigned */
+      .speaker-0 .chatBubble { background-color: #4c5256; }
+      .speaker-1 .chatBubble { background-color: #7c3aed; }
+      .speaker-2 .chatBubble { background-color: #dc2626; }
+      .speaker-3 .chatBubble { background-color: #059669; }
+      .speaker-4 .chatBubble { background-color: #d97706; }
+      .speaker-5 .chatBubble { background-color: #dc2626; }
+      .speaker-6 .chatBubble { background-color: #7c2d12; }
+      .speaker-7 .chatBubble { background-color: #1e40af; }
+      .speaker-8 .chatBubble { background-color: #be185d; }
+      .speaker-9 .chatBubble { background-color: #065f46; }
+      
+      .selectedChatStart .chatBubble {
         border-top: 5px solid #09ff00;
       }
-      .selectedChatEnd {
+      .selectedChatEnd .chatBubble {
         border-bottom: 5px solid #09ff00;
       }
+      
+      /* Legacy classes for compatibility */
+      .youChatInstance,
+      .interviewerChatInstance {
+        display: none; /* Hide old style messages */
+      }
+      
       #gernerateResponse {
         margin-bottom: 10px;
       }
@@ -63,7 +110,7 @@
   <body style="width: 500px; display: flex; flex-direction: column">
     <h1>tech-int-cheat</h1>
     <div id="chatContainer">
-      <!-- this container will be populated dynamicly with messages of class youChatInstance and interviewerChatInstance -->
+      <!-- this container will be populated dynamically with messages -->
     </div>
     <div>
       Selected indexes: <strong id="startContentEx"></strong> ...

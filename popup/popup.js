@@ -3,6 +3,8 @@ console.log("Popup!!");
 let chat = [];
 let startChat = null;
 let endChat = null;
+let speakers = [];
+let speakerColorMap = {};
 
 // get element of id selectedIndexes
 const startContentEx = document.getElementById("startContentEx");
@@ -21,27 +23,77 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   meetId = url.split("?")[0].split("/").pop();
 });
 
+const assignSpeakerColors = (speakersList) => {
+  speakersList.forEach((speaker, index) => {
+    if (!speakerColorMap[speaker]) {
+      speakerColorMap[speaker] = index % 10; // Use modulo for color cycling
+    }
+  });
+};
+
+const createChatMessageElement = (chatInstance) => {
+  const messageDiv = document.createElement("div");
+  messageDiv.classList.add("chatMessage");
+  messageDiv.setAttribute("ticId", chatInstance.ticId);
+  
+  // Add positioning class
+  if (chatInstance.isCurrentUser) {
+    messageDiv.classList.add("currentUser");
+  } else {
+    messageDiv.classList.add("otherUser");
+    // Add speaker color class for non-current users
+    const colorIndex = speakerColorMap[chatInstance.role];
+    if (colorIndex !== undefined) {
+      messageDiv.classList.add(`speaker-${colorIndex}`);
+    }
+  }
+  
+  // Create speaker name element (only show for others, not for current user)
+  if (!chatInstance.isCurrentUser) {
+    const speakerNameDiv = document.createElement("div");
+    speakerNameDiv.classList.add("speakerName");
+    speakerNameDiv.textContent = chatInstance.role;
+    messageDiv.appendChild(speakerNameDiv);
+  }
+  
+  // Create chat bubble
+  const bubbleDiv = document.createElement("div");
+  bubbleDiv.classList.add("chatBubble");
+  bubbleDiv.textContent = chatInstance.content;
+  messageDiv.appendChild(bubbleDiv);
+  
+  // Add click event listener
+  messageDiv.addEventListener("click", function () {
+    selectChatInstance(messageDiv);
+  });
+  
+  return messageDiv;
+};
+
 const reactToSelectedChats = () => {
   // remove the class selectedChatStart and selectedChatEnd from all the divs
-  const chatInstances = document.querySelectorAll(
-    ".youChatInstance, .interviewerChatInstance"
-  );
+  const chatInstances = document.querySelectorAll(".chatMessage");
   chatInstances.forEach((chatInstance) => {
     chatInstance.classList.remove("selectedChatStart");
     chatInstance.classList.remove("selectedChatEnd");
   });
+  
   // find the startChat and endChat divs and add the class selectedChatStart and selectedChatEnd respectively
   if (startChat !== null) {
     const startChatInstance = document.querySelector(
       `[ticid="${chat[startChat].ticId}"]`
     );
-    startChatInstance.classList.add("selectedChatStart");
+    if (startChatInstance) {
+      startChatInstance.classList.add("selectedChatStart");
+    }
   }
   if (endChat !== null) {
     const endChatInstance = document.querySelector(
       `[ticid="${chat[endChat].ticId}"]`
     );
-    endChatInstance.classList.add("selectedChatEnd");
+    if (endChatInstance) {
+      endChatInstance.classList.add("selectedChatEnd");
+    }
   }
 
   startContentEx.innerText = startChat !== null ? chat[startChat].content : "";
@@ -95,10 +147,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     meetId &&
     request.data.chats[meetId]
   ) {
-    // iterate through the chat and populate the chatContainer div with divs containing the class youChatInstance and interviewerChatInstance depending on the role, the text content of the div should be the content
     const chatContainer = document.getElementById("chatContainer");
-    // only add a new div if the ticId is not already in the chatContainer
     chat = request.data.chats[meetId];
+    
+    // Update speakers list and assign colors
+    if (request.data.speakers) {
+      speakers = request.data.speakers;
+      assignSpeakerColors(speakers);
+    }
 
     // if there is nothing inside the responseContainer.innerText then send a message to the service worker of type "GET_CHATGPT_RESPONSE"
     if (responseContainer.innerText.includes("(Response will show here)")) {
@@ -109,28 +165,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 
     chat.forEach((chatInstance) => {
-      const chatDiv = document.createElement("div");
-      chatDiv.innerText = chatInstance.content;
-      if (chatInstance.role.toUpperCase() === "YOU") {
-        chatDiv.classList.add("youChatInstance");
+      const existingElement = document.querySelector(`[ticId="${chatInstance.ticId}"]`);
+      
+      if (!existingElement) {
+        // Create new message element
+        const messageElement = createChatMessageElement(chatInstance);
+        chatContainer.appendChild(messageElement);
       } else {
-        chatDiv.classList.add("interviewerChatInstance");
-      }
-      // add an attribute ticId with the value of the ticId
-      chatDiv.setAttribute("ticId", chatInstance.ticId);
-
-      chatDiv.addEventListener("click", function () {
-        selectChatInstance(chatDiv);
-      });
-
-      if (document.querySelector(`[ticId="${chatInstance.ticId}"]`) === null) {
-        chatContainer.appendChild(chatDiv);
-      } else if (chatInstance.ticId) {
-        // get the div with the ticId and update the innerText
-        const existingChatDiv = document.querySelector(
-          `[ticId="${chatInstance.ticId}"]`
-        );
-        existingChatDiv.innerText = chatInstance.content;
+        // Update existing message content
+        const bubbleElement = existingElement.querySelector('.chatBubble');
+        if (bubbleElement) {
+          bubbleElement.textContent = chatInstance.content;
+        }
       }
     });
   }
