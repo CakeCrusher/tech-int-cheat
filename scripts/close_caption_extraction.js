@@ -14,34 +14,49 @@ const tempChat = {}; // {ticId: {content: string, timeModified: Date }}
 const speakers = new Set(); // Track all unique speakers
 setInterval(function () {
   try {
-    // Find the closed caption container in the new UI structure
-    const chatDivs = document.querySelectorAll("div.iOzk7");
     let ccContainer = null;
+    let speakerContainers = null;
     
-    // First try the new UI structure approach
-    if (chatDivs && chatDivs.length > 0) {
-      // In the new UI, we take the first iOzk7 div that contains caption elements
-      for (const div of chatDivs) {
-        if (div.querySelector(".nMcdL.bj4p3b")) {
-          ccContainer = div;
-          break;
+    // Method 1: First try to find the captions using the new accessibility attributes
+    const captionsRegion = document.querySelector('div[role="region"][aria-label="Captions"]');
+    if (captionsRegion) {
+      speakerContainers = captionsRegion.querySelectorAll(".nMcdL.bj4p3b");
+      if (speakerContainers && speakerContainers.length > 0) {
+        ccContainer = captionsRegion;
+      }
+    }
+    
+    // Method 2: If that didn't work, look for iOzk7 divs that contain caption elements
+    if (!ccContainer) {
+      const chatDivs = document.querySelectorAll("div.iOzk7");
+      if (chatDivs && chatDivs.length > 0) {
+        for (const div of chatDivs) {
+          const containers = div.querySelectorAll(".nMcdL.bj4p3b");
+          if (containers && containers.length > 0) {
+            ccContainer = div;
+            speakerContainers = containers;
+            break;
+          }
         }
       }
     }
     
-    // Fallback to the previous approach if we couldn't find it with the new method
+    // Method 3: Fallback to the original method as last resort
     if (!ccContainer) {
+      const chatDivs = document.querySelectorAll("div.iOzk7");
       ccContainer = Array.from(chatDivs).filter((div) => {
         return div.style.display != "none";
       })[0];
+      
+      if (ccContainer) {
+        speakerContainers = ccContainer.querySelectorAll(".nMcdL.bj4p3b");
+      }
     }
     
-    // If we still couldn't find it, exit
-    if (!ccContainer) {
-      throw new Error("Closed caption container not found");
+    // If we still couldn't find it, exit with detailed error
+    if (!ccContainer || !speakerContainers || speakerContainers.length === 0) {
+      throw new Error("Closed caption container or speakers not found - UI may have changed again");
     }
-    
-    let speakerContainers = ccContainer.querySelectorAll(".nMcdL.bj4p3b");
 
     speakerContainers.forEach((speaker) => {
       const ticIdOnDiv = speaker.getAttribute("ticId");
@@ -99,6 +114,11 @@ setInterval(function () {
       data: { chat, meetId, speakers: Array.from(speakers) },
     });
   } catch (e) {
-    console.log("no CC", e);
+    console.log("Closed caption extraction error:", e);
+    // Log more diagnostic information to help debug issues
+    const hasIozk7 = document.querySelectorAll("div.iOzk7").length > 0;
+    const hasCaptionsRegion = document.querySelector('div[role="region"][aria-label="Captions"]') !== null;
+    console.log("Diagnostic info - iOzk7 elements found:", hasIozk7);
+    console.log("Diagnostic info - Captions region found:", hasCaptionsRegion);
   }
 }, 1000);
