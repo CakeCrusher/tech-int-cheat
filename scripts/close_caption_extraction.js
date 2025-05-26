@@ -14,10 +14,33 @@ const tempChat = {}; // {ticId: {content: string, timeModified: Date }}
 const speakers = new Set(); // Track all unique speakers
 setInterval(function () {
   try {
+    // Find the closed caption container in the new UI structure
     const chatDivs = document.querySelectorAll("div.iOzk7");
-    const ccContainer = Array.from(chatDivs).filter((div) => {
-      return div.style.display != "none";
-    })[0];
+    let ccContainer = null;
+    
+    // First try the new UI structure approach
+    if (chatDivs && chatDivs.length > 0) {
+      // In the new UI, we take the first iOzk7 div that contains caption elements
+      for (const div of chatDivs) {
+        if (div.querySelector(".nMcdL.bj4p3b")) {
+          ccContainer = div;
+          break;
+        }
+      }
+    }
+    
+    // Fallback to the previous approach if we couldn't find it with the new method
+    if (!ccContainer) {
+      ccContainer = Array.from(chatDivs).filter((div) => {
+        return div.style.display != "none";
+      })[0];
+    }
+    
+    // If we still couldn't find it, exit
+    if (!ccContainer) {
+      throw new Error("Closed caption container not found");
+    }
+    
     let speakerContainers = ccContainer.querySelectorAll(".nMcdL.bj4p3b");
 
     speakerContainers.forEach((speaker) => {
